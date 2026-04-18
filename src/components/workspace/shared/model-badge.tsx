@@ -3,10 +3,12 @@ type ModelBadgeProps = {
   size?: "sm" | "md";
 };
 
+const OPENAI_COLOR = "text-[#10a37f]";
+
 const providerColor: Record<string, string> = {
-  gpt: "text-[#10a37f]",
-  "o1": "text-[#10a37f]",
-  "o3": "text-[#10a37f]",
+  gpt: OPENAI_COLOR,
+  o1: OPENAI_COLOR,
+  o3: OPENAI_COLOR,
   claude: "text-[#d97706]",
   gemini: "text-[#4285f4]",
 };
