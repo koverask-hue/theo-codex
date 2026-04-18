@@ -7,12 +7,16 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+      // Default ignores of eslint-config-next:
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      // Electron compiled output — linted via electron/tsconfig.json, not ESLint
+      ".electron-dist/**",
+      "dist/**",
+      "electron/**",
+    ]),
 ]);
 
 export default eslintConfig;
