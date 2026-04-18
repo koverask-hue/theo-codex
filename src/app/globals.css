@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* ─── light mode ─────────────────────────────────────────────── */
+:root {
+  --background: #f6f8fa;
+  --foreground: #1f2328;
+  --panel: #ffffff;
+  --elevated: #f0f2f5;
+  --muted: #9198a1;
+  --secondary: #656d76;
+  --border: #d0d7de;
+  --border-strong: #b1bac4;
+  --accent: #0969da;
+  --accent-subtle: rgba(9, 105, 218, 0.08);
+  --success: #1a7f37;
+  --success-subtle: rgba(26, 127, 55, 0.08);
+  --warning: #9a6700;
+  --warning-subtle: rgba(154, 103, 0, 0.08);
+  --danger: #cf222e;
+  --danger-subtle: rgba(207, 34, 46, 0.08);
+  --purple: #8250df;
+  --purple-subtle: rgba(130, 80, 223, 0.08);
+}
+
+/* ─── dark mode ──────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1117;
+    --foreground: #e6edf3;
+    --panel: #161b22;
+    --elevated: #1c2128;
+    --muted: #6e7681;
+    --secondary: #8b949e;
+    --border: #21262d;
+    --border-strong: #30363d;
+    --accent: #4493f8;
+    --accent-subtle: rgba(68, 147, 248, 0.10);
+    --success: #2ea043;
+    --success-subtle: rgba(46, 160, 67, 0.08);
+    --warning: #d29922;
+    --warning-subtle: rgba(210, 153, 34, 0.08);
+    --danger: #f85149;
+    --danger-subtle: rgba(248, 81, 73, 0.08);
+    --purple: #bc8cff;
+    --purple-subtle: rgba(188, 140, 255, 0.08);
+  }
+}
+
+/* ─── tailwind token mapping ─────────────────────────────────── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-elevated: var(--elevated);
+  --color-muted: var(--muted);
+  --color-secondary: var(--secondary);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-purple: var(--purple);
+  --color-purple-subtle: var(--purple-subtle);
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+}
+
+/* ─── base ───────────────────────────────────────────────────── */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border-radius: 3px;
+}
+
+/* ─── focus ring ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── selection ──────────────────────────────────────────────── */
+::selection {
+  background: var(--accent-subtle);
+  color: var(--foreground);
+}
