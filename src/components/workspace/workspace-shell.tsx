@@ -1,148 +1,105 @@
+"use client";
+
+import { useState } from "react";
+import { NavSidebar, type ActiveView } from "./nav-sidebar";
+import { TasksView } from "./views/tasks-view";
+import { AgentsView } from "./views/agents-view";
+import { PlanningView } from "./views/planning-view";
+import { ArtifactsView } from "./views/artifacts-view";
+import { ModelsView } from "./views/models-view";
 import {
-  architectureLayers,
-  featureTree,
-  mvpScope,
-  productDefinition,
-  proposedModuleStructure,
-  recommendedStack,
-} from "@/core/product/definition";
+  mockWorkspaces,
+  mockCurrentRun,
+  mockLiveAgents,
+  mockArtifacts,
+  mockRecentRuns,
+  mockModels,
+  mockRoutingRules,
+  mockSkills,
+} from "./mock-data";
+
+const VIEW_LABELS: Record<ActiveView, string> = {
+  tasks: "Tasks",
+  agents: "Agents",
+  planning: "Planning",
+  artifacts: "Artifacts",
+  models: "Models & Skills",
+};
 
 export function WorkspaceShell() {
+  const [activeView, setActiveView] = useState<ActiveView>("tasks");
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState("ws-1");
+
+  const activeWorkspace = mockWorkspaces.find((w) => w.id === activeWorkspaceId);
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1600px]">
-        <aside className="hidden w-72 border-r border-border/80 bg-panel p-4 lg:block">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted">Workspaces</p>
-          <h1 className="mt-2 text-lg font-semibold">Theo Codex</h1>
-          <ul className="mt-6 space-y-2 text-sm">
-            {[
-              "Core App Platform",
-              "UI System",
-              "Model Routing Lab",
-              "Skill Registry",
-            ].map((workspace, index) => (
-              <li key={workspace} className="rounded-md border border-border/70 p-3">
-                <p className="font-medium">{workspace}</p>
-                <p className="text-xs text-muted">
-                  {index === 0 ? "Active workspace" : "Pinned"}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </aside>
+    <div className="flex h-screen overflow-hidden bg-background text-foreground antialiased">
+      {/* Left sidebar */}
+      <NavSidebar
+        workspaces={mockWorkspaces}
+        activeWorkspaceId={activeWorkspaceId}
+        activeView={activeView}
+        onWorkspaceChange={setActiveWorkspaceId}
+        onViewChange={setActiveView}
+        activeRunStatus={mockCurrentRun.status}
+      />
 
-        <main className="flex-1 border-r border-border/80 bg-background p-6 lg:p-8">
-          <header className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted">Phase 0 · Product Definition</p>
-            <h2 className="text-2xl font-semibold tracking-tight lg:text-3xl">
-              Multi-agent coding workspace foundation
-            </h2>
-            <p className="max-w-3xl text-sm text-muted lg:text-base">{productDefinition.positioning}</p>
-          </header>
+      {/* Main content */}
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        {/* Top bar */}
+        <header className="flex h-12 shrink-0 items-center justify-between border-b border-border bg-panel px-5">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-foreground">
+              {activeWorkspace?.name ?? "Workspace"}
+            </span>
+            <span className="text-muted">·</span>
+            <span className="text-xs text-secondary">
+              {VIEW_LABELS[activeView]}
+            </span>
+          </div>
 
-          <section className="mt-8 grid gap-4 lg:grid-cols-2">
-            <article className="rounded-lg border border-border/80 bg-panel p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Concise Product Definition</h3>
-              <ul className="mt-3 space-y-2 text-sm">
-                <li>
-                  <span className="font-medium">Primary user:</span> {productDefinition.primaryUser}
-                </li>
-                <li>
-                  <span className="font-medium">Primary outcome:</span> {productDefinition.primaryOutcome}
-                </li>
-              </ul>
-            </article>
+          {/* Run stats */}
+          {activeView !== "models" && (
+            <div className="flex items-center gap-4 text-[11px] text-muted">
+              <span>
+                {mockLiveAgents.filter((a) => a.status === "running").length} agents running
+              </span>
+              <span>
+                {mockArtifacts.filter((a) => a.runId === mockCurrentRun.id).length} artifacts
+              </span>
+              <button className="rounded border border-border bg-elevated px-2.5 py-1 text-xs font-medium text-secondary transition-colors hover:text-foreground">
+                New run
+              </button>
+            </div>
+          )}
+        </header>
 
-            <article className="rounded-lg border border-border/80 bg-panel p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">MVP Scope Cut</h3>
-              <ul className="mt-3 space-y-2 text-sm">
-                {mvpScope.included.slice(0, 3).map((item) => (
-                  <li key={item}>• {item}</li>
-                ))}
-              </ul>
-            </article>
-          </section>
-
-          <section className="mt-8 space-y-5">
-            <article className="rounded-lg border border-border/80 bg-panel p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Feature Tree</h3>
-              <div className="mt-4 space-y-4 text-sm">
-                {featureTree.map((node) => (
-                  <div key={node.name}>
-                    <p className="font-semibold">{node.name}</p>
-                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
-                      {node.children?.map((child) => <li key={child.name}>{child.name}</li>)}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="rounded-lg border border-border/80 bg-panel p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Proposed Architecture</h3>
-              <div className="mt-4 space-y-3 text-sm">
-                {architectureLayers.map((layer) => (
-                  <div key={layer.layer} className="rounded-md border border-border/70 p-3">
-                    <p className="font-semibold">{layer.layer}</p>
-                    <ul className="mt-1 list-disc pl-5 text-muted">
-                      {layer.responsibilities.map((responsibility) => (
-                        <li key={responsibility}>{responsibility}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="rounded-lg border border-border/80 bg-panel p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
-                Recommended Stack (with rationale)
-              </h3>
-              <ul className="mt-3 space-y-3 text-sm">
-                {recommendedStack.map((choice) => (
-                  <li key={choice.category}>
-                    <p className="font-semibold">{choice.category}: {choice.choice}</p>
-                    <p className="text-muted">{choice.rationale}</p>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </section>
+        {/* View content */}
+        <main className="flex min-h-0 flex-1 overflow-hidden">
+          {activeView === "tasks" && (
+            <TasksView
+              run={mockCurrentRun}
+              agents={mockLiveAgents}
+              artifacts={mockArtifacts}
+            />
+          )}
+          {activeView === "agents" && (
+            <AgentsView agents={mockLiveAgents} />
+          )}
+          {activeView === "planning" && (
+            <PlanningView run={mockCurrentRun} agents={mockLiveAgents} />
+          )}
+          {activeView === "artifacts" && (
+            <ArtifactsView artifacts={mockArtifacts} runs={mockRecentRuns} />
+          )}
+          {activeView === "models" && (
+            <ModelsView
+              models={mockModels}
+              routingRules={mockRoutingRules}
+              skills={mockSkills}
+            />
+          )}
         </main>
-
-        <aside className="hidden w-96 bg-panel p-6 xl:block">
-          <section>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Artifacts & Routing</h3>
-            <ul className="mt-4 space-y-2 text-sm">
-              {[
-                "Task list (required before major work)",
-                "Implementation plan",
-                "Git-aware diff bundle",
-                "Screenshot evidence",
-                "Test run output",
-                "Walkthrough summary",
-              ].map((item) => (
-                <li key={item} className="rounded-md border border-border/70 p-3">{item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="mt-8">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">Initial Module Structure</h3>
-            <ul className="mt-3 space-y-2 text-xs text-muted">
-              {proposedModuleStructure.map((item) => (
-                <li key={item}>• {item}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="mt-8 rounded-lg border border-border/80 p-4">
-            <h3 className="text-sm font-semibold">Approval Checkpoint</h3>
-            <p className="mt-2 text-sm text-muted">
-              Foundation architecture and contracts are ready. Awaiting approval before deep implementation.
-            </p>
-          </section>
-        </aside>
       </div>
     </div>
   );
